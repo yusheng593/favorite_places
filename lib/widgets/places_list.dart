@@ -65,6 +65,10 @@ class PlacesList extends StatelessWidget {
                 ),
               ),
               child: ListTile(
+                leading: CircleAvatar(
+                  radius: 26,
+                  backgroundImage: FileImage(place[index].image),
+                ),
                 title: Text(
                   place[index].title,
                   style: const TextStyle(

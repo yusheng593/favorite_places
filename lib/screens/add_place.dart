@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:favorite_places/providers/user_places_provider.dart';
+import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,18 +9,25 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  ConsumerState<AddPlaceScreen> createState() => _NewFavoriteState();
+  ConsumerState<AddPlaceScreen> createState() => _AddPlaceScreenState();
 }
 
-class _NewFavoriteState extends ConsumerState<AddPlaceScreen> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
+  File? _selectedImage;
 
   void _saveTitle() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
 
-      ref.read(userPlacesProvider.notifier).addPlace(_enteredTitle);
+      if (_selectedImage == null) {
+        return;
+      }
+
+      ref
+          .read(userPlacesProvider.notifier)
+          .addPlace(_enteredTitle, _selectedImage!);
 
       Navigator.pop(context);
     }
@@ -56,6 +66,11 @@ class _NewFavoriteState extends ConsumerState<AddPlaceScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 10),
+              ImageInput(onPickImage: (image) {
+                _selectedImage = image;
+              }),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _saveTitle,
                 icon: const Icon(Icons.add),

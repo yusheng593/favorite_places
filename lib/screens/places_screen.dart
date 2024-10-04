@@ -55,7 +55,10 @@ class PlacesScreenState extends ConsumerState<PlacesScreen> {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: PlacesList(place: userPlaces, removeFavorite: _removeFavorite),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: PlacesList(place: userPlaces, removeFavorite: _removeFavorite),
+      ),
     );
   }
 }

@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:favorite_places/models/place.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   UserPlacesNotifier() : super(const []);
 
-  void addPlace(String title) {
-    final newPlace = Place(title: title);
+  void addPlace(String title, File image) {
+    final newPlace = Place(title: title, image: image);
     state = [newPlace, ...state];
   }
 
-  void removePlace(Place place) {
-    state = state.where((place) => place.id != place.id).toList();
+  void removePlace(Place placeToRemove) {
+    state = state.where((place) => place.id != placeToRemove.id).toList();
   }
 
   void insertPlace(int index, Place place) {
