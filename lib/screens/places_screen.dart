@@ -9,10 +9,17 @@ class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
 
   @override
-  ConsumerState<PlacesScreen> createState() => PlacesScreenState();
+  ConsumerState<PlacesScreen> createState() => _PlacesScreenState();
 }
 
-class PlacesScreenState extends ConsumerState<PlacesScreen> {
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
+  late Future<void> _placesFuture;
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(userPlacesProvider.notifier).loadPlaces();
+  }
+
   void _removeFavorite(Place favorite) {
     final currentIndex = ref.read(userPlacesProvider).indexOf(favorite);
 
@@ -57,7 +64,13 @@ class PlacesScreenState extends ConsumerState<PlacesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PlacesList(place: userPlaces, removeFavorite: _removeFavorite),
+        child: FutureBuilder(
+          future: _placesFuture,
+          builder: (context, snapshot) => snapshot.connectionState ==
+                  ConnectionState.waiting
+              ? const Center(child: CircularProgressIndicator())
+              : PlacesList(place: userPlaces, removeFavorite: _removeFavorite),
+        ),
       ),
     );
   }
